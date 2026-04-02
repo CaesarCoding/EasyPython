@@ -1,0 +1,34 @@
+from typing import List
+from collections import deque
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        if not nums or k == 0:
+            return []
+        
+        que = deque()
+        res = []
+        
+        for curr_idx, num in enumerate(nums):
+            # 移除窗口外的元素
+            while que and que[0] <= curr_idx - k:
+                que.popleft()
+            # 维护单调递减队列
+            while que and nums[que[-1]] < num:
+                que.pop()
+            que.append(curr_idx)
+            # 窗口形成后记录最大值
+            if curr_idx >= k - 1:
+                res.append(nums[que[0]])
+        
+        return res
+
+# 简洁测试函数
+def main():
+    sol = Solution()
+    print(f"测试1: {sol.maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3)}")
+    print(f"测试2: {sol.maxSlidingWindow([1], 1)}")
+    print(f"测试3: {sol.maxSlidingWindow([1,-1], 1)}")
+
+if __name__ == "__main__":
+    main()
